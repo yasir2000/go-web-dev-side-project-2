@@ -70,35 +70,36 @@ To make our Sprinkle program work, we will:
 In the `$GOPATH/src` directory, create a new folder called `sprinkle` and add a `main.go` file containing the following code:
 
 
-
-1. `package main`
-2. `import (`
-3. ` "bufio"`
-4. ` "fmt"`
-5. ` "math/rand"`
-6. ` "os"`
-7. ` "strings"`
-8. ` "time"`
-9. `)`
-10. `const otherWord = "*"`
-11. `var transforms = []string{ `
-12. `otherWord,`
-13. ` otherWord + "app",`
-14. ` otherWord + "site",`
-15. ` otherWord + "time",`
-16. ` "get" + otherWord,`
-17. ` "go" + otherWord,`
-18. ` "lets " + otherWord,`
-19. ` otherWord + "hq",`
-20. `}`
-21. `func main() {`
-22. ` rand.Seed(time.Now().UTC().UnixNano())`
-23. ` s := bufio.NewScanner(os.Stdin)`
-24. ` for s.Scan() {`
-25. `   t := transforms[rand.Intn(len(transforms))]`
-26. `   fmt.Println(strings.Replace(t, otherWord, s.Text(), -1))`
-27. ` }`
-28. `}`
+``` bash
+`package main`
+import (`
+ "bufio"`
+ "fmt"`
+ "math/rand"`
+ "os"`
+ "strings"`
+ "time"`
+)
+const otherWord = "*"`
+var transforms = []string{ 
+otherWord,
+otherWord + "app",
+otherWord + "site",
+otherWord + "time",
+"get" + otherWord,
+"go" + otherWord,
+"lets " + otherWord,
+ otherWord + "hq",
+}
+func main() {
+ rand.Seed(time.Now().UTC().UnixNano())
+ s := bufio.NewScanner(os.Stdin)
+ for s.Scan() {
+   t := transforms[rand.Intn(len(transforms))]
+  fmt.Println(strings.Replace(t, otherWord, s.Text(), -1))
+ }
+}
+``` 
 
 From now on, it is assumed that you will sort out the appropriate `import`statements yourself.
 
@@ -158,29 +159,30 @@ We have successfully completed our first program, which has a very simple but us
 Some of the words that output from Sprinkle contain spaces and perhaps other characters that are not allowed in domains. So we are going to write a program called Domainify; it converts a line of text into an acceptable domain segment and adds an appropriate **Top-level Domain** (**TLD**) to the end. Alongside the `sprinkle` folder, create a new one called `domainify` and add the `main.go` file with the following code:
 
 
-
-1. `package main`
-2. `var tlds = []string{"com", "net"}`
-3. `const allowedChars = "abcdefghijklmnopqrstuvwxyz0123456789_-"`
-4. `func main() {`
-5. ` rand.Seed(time.Now().UTC().UnixNano())`
-6. ` s := bufio.NewScanner(os.Stdin)`
-7. ` for s.Scan() {`
-8. `   text := strings.ToLower(s.Text())`
-9. `   var newText []rune`
-10. `   for _, r := range text {`
-11. `     if unicode.IsSpace(r) {`
-12. `       r = '-'`
-13. `     }`
-14. `     if !strings.ContainsRune(allowedChars, r) {`
-15. `       continue`
-16. `     }`
-17. `     newText = append(newText, r)`
-18. `   }`
-19. `     fmt.Println(string(newText) + "." +        `
-20. `               tlds[rand.Intn(len(tlds))])`
-21. `  }`
-22. `}`
+``` bash
+package main
+var tlds = []string{"com", "net"}
+const allowedChars = "abcdefghijklmnopqrstuvwxyz0123456789_-"
+func main() {
+ rand.Seed(time.Now().UTC().UnixNano())
+ s := bufio.NewScanner(os.Stdin)
+for s.Scan() {
+  text := strings.ToLower(s.Text())
+   var newText []rune
+   for _, r := range text {
+     if unicode.IsSpace(r) {
+       r = '-'
+     }
+     if !strings.ContainsRune(allowedChars, r) {
+       continue
+     }
+     newText = append(newText, r)
+   }
+     fmt.Println(string(newText) + "." +        
+               tlds[rand.Intn(len(tlds))])
+  }
+}
+```
 
 You will notice a few similarities between Domainify and the Sprinkle program: we set the random seed using `rand.Seed`, generate a `NewScanner`  method wrapping the `os.Stdin` reader, and scan each line until there is no more input.
 
@@ -228,42 +230,43 @@ Our third program, Coolify, will allow us to play with the vowels of words that 
 Create a new folder called `coolify` alongside `sprinkle` and `domainify`, and create the `main.go` code file with the following code:
 
 
-
-1. `package main`
-2. `const (`
-3. ` duplicateVowel bool   = true`
-4. ` removeVowel    bool   = false`
-5. `) `
-6. `func randBool() bool {`
-7. ` return rand.Intn(2) == 0`
-8. `}`
-9. `func main() {`
-10. ` rand.Seed(time.Now().UTC().UnixNano())`
-11. ` s := bufio.NewScanner(os.Stdin)`
-12. ` for s.Scan() {`
-13. `   word := []byte(s.Text())`
-14. `   if randBool() {`
-15. `     var vI int = -1`
-16. `     for i, char := range word {`
-17. `       switch char {`
-18. `       case 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U':`
-19. `   if randBool() {`
-20. `           vI = i`
-21. `         }`
-22. `       }`
-23. `     }`
-24. `     if vI >= 0 {`
-25. `       switch randBool() {`
-26. `       case duplicateVowel:`
-27. `         word = append(word[:vI+1], word[vI:]...)`
-28. `       case removeVowel:`
-29. `         word = append(word[:vI], word[vI+1:]...)`
-30. `       }`
-31. `     }`
-32. `   }`
-33. `   fmt.Println(string(word))`
-34. ` }`
-35. `}`
+``` bash
+package main
+const (
+ duplicateVowel bool   = true
+ removeVowel    bool   = false
+) 
+func randBool() bool {
+ return rand.Intn(2) == 0
+}
+func main() {
+ rand.Seed(time.Now().UTC().UnixNano())
+ s := bufio.NewScanner(os.Stdin)
+ for s.Scan() {
+   word := []byte(s.Text())
+   if randBool() {
+     var vI int = -1
+     for i, char := range word {
+       switch char {
+       case 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U':
+   if randBool() {
+          vI = i
+         }
+      }
+     }
+    if vI >= 0 {
+       switch randBool() {
+       case duplicateVowel:
+         word = append(word[:vI+1], word[vI:]...)
+       case removeVowel:
+         word = append(word[:vI], word[vI+1:]...)
+       }
+    }
+   }
+   fmt.Println(string(word))
+ }
+ }
+```
 
 While the preceding Coolify code looks very similar to the code of Sprinkle and Domainify, it is slightly more complicated. At the very top of the code, we declare two constants, `duplicateVowel` and `removeVowel`, that help make the Coolify code more readable. The `switch` statement decides whether we duplicate or remove a vowel. Also, using these constants, we are able to express our intent very clearly, rather than use just `true` or `false`.
 
@@ -403,71 +406,73 @@ On Windows machines, you can navigate to the properties of your computer and loo
 
 Making a request for in a web browser shows us what the structure of JSON response data looks like when finding synonyms for the word `love`:
 
+``` bash
 
-
-1. `{`
-2. ` "noun":{`
-3. `   "syn":[`
-4. `     "passion",`
-5. `     "beloved",`
-6. `     "dear"`
-7. `   ]`
-8. ` },`
-9. ` "verb":{`
-10. `   "syn":[`
-11. `     "love",`
-12. `     "roll in the hay",`
-13. `     "make out"`
-14. `   ],`
-15. `   "ant":[`
-16. `     "hate"`
-17. `   ]`
-18. ` }`
-19. `}`
+{
+ "noun":{
+   "syn":[
+     "passion",
+     "beloved",
+     "dear"
+   ]
+ },
+ "verb":{
+  "syn":[
+     "love",
+     "roll in the hay",
+     "make out"
+   ],
+   "ant":[
+     "hate"
+   ]
+ }
+}
+```
 
 A real API will return a lot more actual words than what is printed here, but the structure is the important thing. It represents an object, where the keys describe the types of word (verbs, nouns, and so on). Also, values are objects that contain arrays of strings keyed on `syn` or `ant` (for the synonym and antonym, respectively); it is the synonyms we are interested in.
 
 To turn this JSON string data into something we can use in our code, we must decode it into structures of our own using the capabilities found in the `encoding/json` package. Because we're writing something that could be useful outside the scope of our project, we will consume the API in a reusable package rather than directly in our program code. Create a new folder called `thesaurus` alongside your other program folders (in `$GOPATH/src`) and insert the following code into a new `bighuge.go` file:
 
+```bash
 
-
-1. `package thesaurus`
-2. `import (`
-3. ` "encoding/json"`
-4. ` "errors"`
-5. ` "net/http"`
-6. `)`
-7. `type BigHuge struct {`
-8. ` APIKey string`
-9. `}`
-10. `type synonyms struct {`
-11. ` Noun *words `json:"noun"``
-12. ` Verb *words `json:"verb"``
-13. `}`
-14. `type words struct {`
-15. ` Syn []string `json:"syn"``
-16. `}`
-17. `func (b *BigHuge) Synonyms(term string) ([]string, error) {`
-18. ` var syns []string`
-19. ` response, err := http.Get("http://words.bighugelabs.com/api/2/"  +`
-20. `  b.APIKey + "/" + term + "/json")`
-21. ` if err != nil {`
-22. `   return syns, errors.New("bighuge: Failed when looking for  synonyms   `
-23. `    for "" + term + """ + err.Error())`
-24. ` }`
-25. ` var data synonyms`
-26. ` defer response.Body.Close()`
-27. ` if err := json.NewDecoder(response.Body).Decode(&data); err !=  nil {`
-28. `   return syns, err`
-29. ` }`
-30. ` if data.Noun != nil {`
-31. `   syns = append(syns, data.Noun.Syn...)`
-32. ` }`
-33. ` if data.Verb != nil {`
-34. `   syns = append(syns, data.Verb.Syn...)`
-35. ` }`
-36. ` return syns, nil`
-37. `}`
+package thesaurus
+import (
+ "encoding/json"
+ "errors"
+ "net/http"
+)
+type BigHuge struct {
+ APIKey string
+}
+type synonyms struct {
+ Noun *words `json:"noun"`
+ Verb *words `json:"verb"`
+}
+type words struct {
+ Syn []string `json:"syn"`
+}
+func (b *BigHuge) Synonyms(term string) ([]string, error) {
+ var syns []string
+ response, err := http.Get("http://words.bighugelabs.com/api/2/"  +
+  b.APIKey + "/" + term + "/json")
+ if err != nil {
+   return syns, errors.New("bighuge: Failed when looking for  synonyms   
+    for "" + term + """ + err.Error())
+ }
+ var data synonyms
+ defer response.Body.Close()
+ if err := json.NewDecoder(response.Body).Decode(&data); err !=  nil {
+   return syns, err
+ }
+ if data.Noun != nil {
+   syns = append(syns, data.Noun.Syn...)
+ }
+ if data.Verb != nil {
+   syns = append(syns, data.Verb.Syn...)
+ }
+ return syns, nil
+}
+```
 
 In the preceding code, the `BigHuge` type we define houses the necessary API key and provides the `Synonyms` method that will be responsible for doing the work of accessing the endpoint, parsing the response, and returning the results. The most interesting parts of this code are the `synonyms` and `words`structures. They describe the JSON response format in Go terms, namely an object containing noun and verb objects, which in turn contain a slice of strings in a variable called `Syn`. The tags (strings in backticks following each field definition) tell the `encoding/json` package which fields to map to which variables; this is required since we have given them different names.
 
@@ -491,25 +496,26 @@ This simple interface just describes a method that takes a `term` string and ret
 Next, we are going to use this new package in a program. Change the directory in the terminal back up a level to `$GOPATH/src`, create a new folder called `synonyms`, and insert the following code into a new `main.go` file you will place in this folder:
 
 
-
-1. `func main() {`
-2. ` apiKey := os.Getenv("BHT_APIKEY")`
-3. ` thesaurus := &thesaurus.BigHuge{APIKey: apiKey}`
-4. ` s := bufio.NewScanner(os.Stdin)`
-5. ` for s.Scan() {`
-6. `   word := s.Text()`
-7. `   syns, err := thesaurus.Synonyms(word)`
-8. `   if err != nil {`
-9. `     log.Fatalln("Failed when looking for synonyms for  "+word+", err)`
-10. `   }`
-11. `   if len(syns) == 0 {`
-12. `     log.Fatalln("Couldn't find any synonyms for " + word +  ")`
-13. `   }`
-14. `   for _, syn := range syns {`
-15. `     fmt.Println(syn)`
-16. `   }`
-17. ` }`
-18. `}`
+``` bash
+func main() {
+ apiKey := os.Getenv("BHT_APIKEY")
+ thesaurus := &thesaurus.BigHuge{APIKey: apiKey}
+ s := bufio.NewScanner(os.Stdin)
+ for s.Scan() {
+   word := s.Text()
+   syns, err := thesaurus.Synonyms(word)
+   if err != nil {
+     log.Fatalln("Failed when looking for synonyms for  "+word+", err)
+   }
+   if len(syns) == 0 {
+     log.Fatalln("Couldn't find any synonyms for " + word +  ")
+   }
+   for _, syn := range syns {
+     fmt.Println(syn)
+   }
+ }
+}
+```
 
 Now when you manage your imports again, you will have written a complete program that is capable of looking up synonyms of words by integrating the Big Huge Thesaurus API.
 
@@ -579,24 +585,25 @@ Our final program, Available, will connect to a WHOIS server to ask for details 
 
 Create a new folder called `available` alongside others and add a `main.go` file to it containing the following function code:
 
+``` bash
 
-
-1. `func exists(domain string) (bool, error) {`
-2. ` const whoisServer string = "com.whois-servers.net"`
-3. ` conn, err := net.Dial("tcp", whoisServer+":43")`
-4. ` if err != nil {`
-5. `   return false, err`
-6. ` }`
-7. ` defer conn.Close()`
-8. ` conn.Write([]byte(domain + "rn"))`
-9. ` scanner := bufio.NewScanner(conn)`
-10. ` for scanner.Scan() {`
-11. `   if strings.Contains(strings.ToLower(scanner.Text()), "no match") {`
-12. `     return false, nil`
-13. `   }`
-14. ` }`
-15. ` return true, nil`
-16. `}`
+func exists(domain string) (bool, error) {
+const whoisServer string = "com.whois-servers.net"
+ conn, err := net.Dial("tcp", whoisServer+":43")
+ if err != nil {
+   return false, err
+ }
+ defer conn.Close()
+ conn.Write([]byte(domain + "rn"))
+ scanner := bufio.NewScanner(conn)
+ for scanner.Scan() {
+   if strings.Contains(strings.ToLower(scanner.Text()), "no match") {
+     return false, nil
+   }
+ }
+ return true, nil
+}
+```
 
 The `exists` function implements what little there is in the WHOIS specification by opening a connection to port `43` on the specified `whoisServer`instance with a call to `net.Dial`. We then defer the closing of the connection, which means that no matter how the function exits (successful, with an error, or even a panic), `Close()` will still be called on the `conn` connection. Once the connection is open, we simply write the domain followed by `rn` (the carriage return and linefeed characters). This is all that the specification tells us, so we are on our own from now on.
 
@@ -609,21 +616,23 @@ Let's add a `main` function that uses our `exists` function to check whether the
 Add the following code to `main.go`:
 
 
+``` bash
 
-1. `var marks = map[bool]string{true: "✔", false: "✖"}`
-2. `func main() {`
-3. `s := bufio.NewScanner(os.Stdin)`
-4. `for s.Scan() {`
-5. `domain := s.Text()`
-6. `fmt.Print(domain, " ")`
-7. `exist, err := exists(domain)`
-8. `if err != nil {`
-9. `log.Fatalln(err)`
-10. `}`
-11. `fmt.Println(marks[!exist])`
-12. `time.Sleep(1 * time.Second)`
-13. `}`
-14. `}`
+var marks = map[bool]string{true: "✔", false: "✖"}
+func main() {
+s := bufio.NewScanner(os.Stdin)
+for s.Scan() {
+domain := s.Text()
+fmt.Print(domain, " ")
+exist, err := exists(domain)
+if err != nil {
+log.Fatalln(err)
+}
+fmt.Println(marks[!exist])
+time.Sleep(1 * time.Second)
+}
+}
+```
 
 **Note**: We can use the check and cross characters in our code happily because all Go code files are UTF-8 compliant the best way to actually get these characters is to search the Web for them and use the copy and paste option to bring them into our code. Otherwise, there are platform-dependent ways to get such special characters.
 
@@ -763,40 +772,41 @@ The preceding script simply builds all our subprograms (including `domainfinder`
 Create a new file called `main.go` inside `domainfinder` and insert the following code into the file:
 
 
-
-1. `package main`
-2. `var cmdChain = []*exec.Cmd{`
-3. ` exec.Command("lib/synonyms"),`
-4. ` exec.Command("lib/sprinkle"),`
-5. ` exec.Command("lib/coolify"),`
-6. ` exec.Command("lib/domainify"),`
-7. ` exec.Command("lib/available"),`
-8. `}`
-9. `func main() {`
-10. ` cmdChain[0].Stdin = os.Stdin`
-11. ` cmdChain[len(cmdChain)-1].Stdout = os.Stdout`
-12. ` for i := 0; i &lt; len(cmdChain)-1; i++ {`
-13. `   thisCmd := cmdChain[i]`
-14. `   nextCmd := cmdChain[i+1]`
-15. `   stdout, err := thisCmd.StdoutPipe()`
-16. `   if err != nil {`
-17. `     log.Fatalln(err)`
-18. `   }`
-19. `   nextCmd.Stdin = stdout`
-20. ` }`
-21. ` for _, cmd := range cmdChain {`
-22. `   if err := cmd.Start(); err != nil {`
-23. `     log.Fatalln(err)`
-24. `   } else {`
-25. `     defer cmd.Process.Kill()`
-26. `   }`
-27. ` }`
-28. ` for _, cmd := range cmdChain {`
-29. `   if err := cmd.Wait(); err != nil {`
-30. `     log.Fatalln(err)`
-31. `   }`
-32. ` }`
-33. `}`
+```bash
+package main
+var cmdChain = []*exec.Cmd{
+ exec.Command("lib/synonyms"),
+ exec.Command("lib/sprinkle"),
+ exec.Command("lib/coolify"),
+ exec.Command("lib/domainify"),
+ exec.Command("lib/available"),
+}
+func main() {
+ cmdChain[0].Stdin = os.Stdin
+ cmdChain[len(cmdChain)-1].Stdout = os.Stdout
+ for i := 0; i &lt; len(cmdChain)-1; i++ {
+   thisCmd := cmdChain[i]
+   nextCmd := cmdChain[i+1]
+   stdout, err := thisCmd.StdoutPipe()
+   if err != nil {
+     log.Fatalln(err)
+   }
+   nextCmd.Stdin = stdout
+ }
+ for _, cmd := range cmdChain {
+   if err := cmd.Start(); err != nil {
+     log.Fatalln(err)
+  } else {
+     defer cmd.Process.Kill()
+   }
+ }
+ for _, cmd := range cmdChain {
+   if err := cmd.Wait(); err != nil {
+     log.Fatalln(err)
+   }
+ }
+}
+```
 
 The `os/exec` package gives us everything we need to work with to run external programs or commands from within Go programs. First, our `cmdChain` slice contains `*exec.Cmd` commands in the order in which we want to join them together.
 
