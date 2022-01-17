@@ -71,16 +71,16 @@ In the `$GOPATH/src` directory, create a new folder called `sprinkle` and add a 
 
 
 ``` bash
-`package main`
-import (`
- "bufio"`
- "fmt"`
- "math/rand"`
- "os"`
- "strings"`
- "time"`
+package main
+import (
+ "bufio"
+ "fmt"
+ "math/rand"
+ "os"
+ "strings"
+ "time"
 )
-const otherWord = "*"`
+const otherWord = "*"
 var transforms = []string{ 
 otherWord,
 otherWord + "app",
@@ -281,20 +281,17 @@ Once we have selected a vowel, we use `randBool` again to randomly decide what a
 **Note**: This is where the helpful constants come in; consider the following alternative switch statement:
 
 
-
-1. `switch randBool() {`
-2. ` case true:`
-3. `   word = append(word[:vI+1], word[vI:]...)`
-4. ` case false:`
-5. `   word = append(word[:vI], word[vI+1:]...) }`
+```bash
+switch randBool() {
+ case true:
+   word = append(word[:vI+1], word[vI:]...)
+ case false:
+   word = append(word[:vI], word[vI+1:]...) }
+   ```
 
 In the preceding code snippet, it's difficult to tell what is going on because `true ` and `false ` don't express any context. On the other hand, using `duplicateVowel ` and `removeVowel ` tells anyone reading the code what we mean by the result of `randBool` .
 
 The three dots following slices cause each item to pass as a separate argument to the `append` function. This is an idiomatic way of appending one slice to another. Inside the `switch` case, we do some slice manipulation to either duplicate the vowel or remove it altogether. We are slicing our `[]byte` slice again and using the `append` function to build a new one made up of sections of the original word. The following diagram shows which sections of the string we access in our code:
-
-
-
-<p id="gdcalert1" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: error handling inline image </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert2">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
 
 
 
@@ -657,9 +654,6 @@ Once Available is running, type in some domain names and see the result appear o
 
 
 
-<p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: error handling inline image </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
 
 As you can see, for domains that are not available, we get a little cross mark next to them; however, when we make up a domain name using random numbers, we see that it is indeed available.
 
@@ -716,19 +710,9 @@ For example, typing in `chat` might cause the programs to take the following act
 
 * confabaapp.com
 
-<p id="gdcalert3" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: error handling inline image </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert4">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
 * goconfabulatioon.net 
 
-<p id="gdcalert4" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: error handling inline image </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert5">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
 * schmooze-time.com 
-
-<p id="gdcalert5" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: error handling inline image </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert6">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
 
 <h5>**One program to rule them all**</h5>
 
@@ -876,11 +860,6 @@ Once all the programs start running, we iterate over every command again and wai
 Run the `build.sh` or `build.bat` script again and notice that the `domainfinder` program has the same behavior as we have seen before, with a much more elegant interface.
 
 The following screenshot shows the output from our programs when we type `clouds`; we have found quite a few available domain name options:
-
-
-
-<p id="gdcalert6" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: error handling inline image </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert7">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
 
 
 <h5>**Summary**</h5>
