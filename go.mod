@@ -1,4 +1,4 @@
-module example.com/m
+module github.com/yasir2000/go-web-dev-side-project-2
 
 go 1.17
 
